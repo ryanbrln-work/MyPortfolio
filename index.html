@@ -15,6 +15,18 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/styles.css" />
+    <script>
+      (function () {
+        var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        var lite =
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+          window.matchMedia("(pointer: coarse)").matches ||
+          (conn && (conn.saveData || /2g/.test(conn.effectiveType || ""))) ||
+          (navigator.deviceMemory && navigator.deviceMemory <= 4);
+        if (lite) document.documentElement.classList.add("lite");
+        window.__LITE = !!lite;
+      })();
+    </script>
     <style>
       html.is-loading { overflow: hidden; }
       .page-loader {
@@ -63,9 +75,6 @@
     <div class="hud" aria-hidden="true">
       <span class="hud-rec"><i></i> REC</span>
       <span class="timecode" id="timecode">01:00:00:00</span>
-    </div>
-    <div class="zoom-orb-layer" id="zoom-orb-layer" aria-hidden="true">
-      <div class="tech-orb" id="zoom-orb"></div>
     </div>
     <div class="progress" id="progress"></div>
     <div class="cursor" id="cursor"></div>
@@ -139,6 +148,9 @@
                     src="Assets/avatar.png"
                     alt="Ryan Paolo E. Barlan in graduation attire"
                     id="avatar-img"
+                    width="720"
+                    height="900"
+                    decoding="async"
                   />
                 </div>
                 <div class="badge-3d one">
@@ -167,137 +179,159 @@
             </p>
           </div>
 
-          <div class="timeline" id="timeline">
-            <div class="timeline-line" aria-hidden="true">
-              <div class="timeline-progress" id="timeline-progress"></div>
-            </div>
+          <div class="timeline ladder" id="timeline">
+            <svg class="ladder-rail" id="ladder-rail" aria-hidden="true">
+              <path class="ladder-track" id="ladder-track"></path>
+              <path class="ladder-progress" id="ladder-progress"></path>
+            </svg>
 
             <article class="job">
               <span class="job-dot" aria-hidden="true"></span>
-              <div class="job-card">
+              <div class="job-card" tabindex="0" role="button" aria-expanded="false">
                 <div class="job-top">
                   <p class="job-role">Software Developer · Part-Time · Remote</p>
                   <p class="job-dates">Sept 2025 — Present</p>
                 </div>
                 <h3>LSN Engineering Pte. Ltd.</h3>
-                <ul>
-                  <li>
-                    Building the LSN System, a production HR and operations
-                    platform for Singapore construction manpower: employee
-                    records, daily time entry with overtime, leave, training,
-                    payroll, client billing, and foreign-worker levy files.
-                  </li>
-                  <li>
-                    Writing C# back-end logic and ASP.NET Core Razor Pages,
-                    with HTML, CSS, and JavaScript for the interfaces staff
-                    use on the job.
-                  </li>
-                  <li>
-                    Designing PostgreSQL schemas and role-based access (site
-                    worker, office, admin) so two companies — LSN Engineering
-                    and Chang Sheng Contractors — can share one codebase with
-                    separate databases and branding.
-                  </li>
-                  <li>
-                    Delivering operational outputs, not just screens: Excel
-                    payroll/billing workbooks, PDF payslips, and audit-friendly
-                    activity logs.
-                  </li>
-                  <li>
-                    Built the internal API as Razor Page handlers (JSON and
-                    file responses on <code>?handler=</code> routes) for time
-                    entry, employees, payroll, and related modules — not a
-                    separate public REST service.
-                  </li>
-                </ul>
-                <div class="job-links">
-                  <a href="https://lsn-engineering.com/" target="_blank" rel="noopener" data-cursor>Company website</a>
-                  <a href="https://linkedin.com/company/lsn-engineering-pte-ltd" target="_blank" rel="noopener" data-cursor>Company LinkedIn</a>
+                <p class="job-summary">
+                  Building the LSN System — HR, time, payroll, and billing for
+                  two Singapore construction companies on one C# / ASP.NET stack.
+                </p>
+                <span class="job-more">Read more</span>
+                <div class="job-full">
+                  <ul>
+                    <li>
+                      Building the LSN System, a production HR and operations
+                      platform for Singapore construction manpower: employee
+                      records, daily time entry with overtime, leave, training,
+                      payroll, client billing, and foreign-worker levy files.
+                    </li>
+                    <li>
+                      Writing C# back-end logic and ASP.NET Core Razor Pages,
+                      with HTML, CSS, and JavaScript for the interfaces staff
+                      use on the job.
+                    </li>
+                    <li>
+                      Designing PostgreSQL schemas and role-based access (site
+                      worker, office, admin) so two companies — LSN Engineering
+                      and Chang Sheng Contractors — can share one codebase with
+                      separate databases and branding.
+                    </li>
+                    <li>
+                      Delivering operational outputs, not just screens: Excel
+                      payroll/billing workbooks, PDF payslips, and audit-friendly
+                      activity logs.
+                    </li>
+                    <li>
+                      Built the internal API as Razor Page handlers (JSON and
+                      file responses on <code>?handler=</code> routes) for time
+                      entry, employees, payroll, and related modules — not a
+                      separate public REST service.
+                    </li>
+                  </ul>
+                  <div class="job-links">
+                    <a href="https://lsn-engineering.com/" target="_blank" rel="noopener" data-cursor>Company website</a>
+                    <a href="https://linkedin.com/company/lsn-engineering-pte-ltd" target="_blank" rel="noopener" data-cursor>Company LinkedIn</a>
+                  </div>
                 </div>
               </div>
             </article>
 
             <article class="job">
               <span class="job-dot" aria-hidden="true"></span>
-              <div class="job-card">
+              <div class="job-card" tabindex="0" role="button" aria-expanded="false">
                 <div class="job-top">
                   <p class="job-role">Internal Audit Intern</p>
                   <p class="job-dates">Feb 2026 — June 2026</p>
                 </div>
                 <h3>Vantage Financial Corporation</h3>
-                <ul>
-                  <li>
-                    Learned the audit workflow by doing it manually first —
-                    branch transaction reviews, CCTV monitoring, and
-                    coordinating with branch staff — so I could see where the
-                    real bottlenecks were before writing any automation.
-                  </li>
-                  <li>
-                    Used Google Colab to run Python — pandas and NumPy for
-                    cleaning tables, OpenCV, EasyOCR, and Pytesseract for
-                    reading text from images and PDFs, plus Excel files — so
-                    the audit team could work from structured data instead of
-                    screenshots.
-                  </li>
-                  <li>
-                    Wrote Google Apps Script (JavaScript) to automate recurring
-                    Google Sheets work, including flagging cancelled
-                    transactions that reviewers previously had to hunt for by
-                    hand.
-                  </li>
-                  <li>
-                    Picked up Excel and Google Sheets shortcuts on the job, and
-                    built spreadsheet formulas to clean and organize files —
-                    filtering out rows we did not need, then pulling cleaned
-                    data from an old sheet into a new working sheet so the team
-                    did not have to copy-paste by hand.
-                  </li>
-                  <li>
-                    That mix of floor work and tooling sharpened how I diagnose
-                    a process, explain a technical fix to non-engineering
-                    teammates, and pick up a new stack quickly enough to ship
-                    something useful in a short internship.
-                  </li>
-                </ul>
+                <p class="job-summary">
+                  Learned the audit process on the floor, then automated it with
+                  Python, OCR, and Google Sheets so reviewers work from clean data.
+                </p>
+                <span class="job-more">Read more</span>
+                <div class="job-full">
+                  <ul>
+                    <li>
+                      Learned the audit workflow by doing it manually first —
+                      branch transaction reviews, CCTV monitoring, and
+                      coordinating with branch staff — so I could see where the
+                      real bottlenecks were before writing any automation.
+                    </li>
+                    <li>
+                      Used Google Colab to run Python — pandas and NumPy for
+                      cleaning tables, OpenCV, EasyOCR, and Pytesseract for
+                      reading text from images and PDFs, plus Excel files — so
+                      the audit team could work from structured data instead of
+                      screenshots.
+                    </li>
+                    <li>
+                      Wrote Google Apps Script (JavaScript) to automate recurring
+                      Google Sheets work, including flagging cancelled
+                      transactions that reviewers previously had to hunt for by
+                      hand.
+                    </li>
+                    <li>
+                      Picked up Excel and Google Sheets shortcuts on the job, and
+                      built spreadsheet formulas to clean and organize files —
+                      filtering out rows we did not need, then pulling cleaned
+                      data from an old sheet into a new working sheet so the team
+                      did not have to copy-paste by hand.
+                    </li>
+                    <li>
+                      That mix of floor work and tooling sharpened how I diagnose
+                      a process, explain a technical fix to non-engineering
+                      teammates, and pick up a new stack quickly enough to ship
+                      something useful in a short internship.
+                    </li>
+                  </ul>
+                </div>
               </div>
             </article>
 
             <article class="job">
               <span class="job-dot" aria-hidden="true"></span>
-              <div class="job-card">
+              <div class="job-card" tabindex="0" role="button" aria-expanded="false">
                 <div class="job-top">
                   <p class="job-role">Video Editor · Freelance · Remote</p>
                   <p class="job-dates">July 2024 — Sept 2024</p>
                 </div>
                 <h3>Nicolas Boucher Online</h3>
-                <ul>
-                  <li>
-                    Edited short-form and long-form videos on generative AI for
-                    business and finance, plus Excel-shortcut tutorials that
-                    were published on social media for
-                    <a href="https://www.youtube.com/@nicolasboucherfinance" target="_blank" rel="noopener">Nicolas Boucher</a>.
-                  </li>
-                  <li>
-                    Owned the edit-to-export pipeline under tight posting
-                    calendars — pacing, captions, and platform-specific
-                    exports — which taught me to protect quality without
-                    missing a deadline.
-                  </li>
-                  <li>
-                    Worked directly with the creator to match brand style,
-                    take notes on what retained viewers, and turn feedback
-                    around the same day when needed.
-                  </li>
-                  <li>
-                    Managed the freelance pipeline in Trello and Notion —
-                    briefs, revision rounds, and delivery dates — so edits
-                    stayed on calendar even when several videos were in
-                    flight at once.
-                  </li>
-                </ul>
-                <div class="job-links">
-                  <a href="https://www.youtube.com/@nicolasboucherfinance" target="_blank" rel="noopener" data-cursor>YouTube channel</a>
-                  <a href="https://www.linkedin.com/in/bouchernicolas/" target="_blank" rel="noopener" data-cursor>Nicolas Boucher on LinkedIn</a>
+                <p class="job-summary">
+                  Edited AI-for-finance and Excel-shortcut videos from brief to
+                  export, on a tight posting calendar.
+                </p>
+                <span class="job-more">Read more</span>
+                <div class="job-full">
+                  <ul>
+                    <li>
+                      Edited short-form and long-form videos on generative AI for
+                      business and finance, plus Excel-shortcut tutorials that
+                      were published on social media for
+                      <a href="https://www.youtube.com/@nicolasboucherfinance" target="_blank" rel="noopener">Nicolas Boucher</a>.
+                    </li>
+                    <li>
+                      Owned the edit-to-export pipeline under tight posting
+                      calendars — pacing, captions, and platform-specific
+                      exports — which taught me to protect quality without
+                      missing a deadline.
+                    </li>
+                    <li>
+                      Worked directly with the creator to match brand style,
+                      take notes on what retained viewers, and turn feedback
+                      around the same day when needed.
+                    </li>
+                    <li>
+                      Managed the freelance pipeline in Trello and Notion —
+                      briefs, revision rounds, and delivery dates — so edits
+                      stayed on calendar even when several videos were in
+                      flight at once.
+                    </li>
+                  </ul>
+                  <div class="job-links">
+                    <a href="https://www.youtube.com/@nicolasboucherfinance" target="_blank" rel="noopener" data-cursor>YouTube channel</a>
+                    <a href="https://www.linkedin.com/in/bouchernicolas/" target="_blank" rel="noopener" data-cursor>Nicolas Boucher on LinkedIn</a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -335,7 +369,7 @@
                   <span class="chip" data-tech="easyocr"><img class="icon-svg" src="Assets/icons/easyocr.svg" alt="" /> EasyOCR</span>
                   <span class="chip" data-tech="pytesseract"><img class="icon-svg" src="Assets/icons/pytesseract.svg" alt="" /> Pytesseract</span>
                   <span class="chip" data-tech="rest"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/swagger.svg" alt="" /> REST APIs</span>
-                  <span class="chip" data-tech="auth"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/oauth.svg" alt="" /> Auth APIs</span>
+                  <span class="chip" data-tech="auth"><img class="icon-svg" src="Assets/icons/oauth.svg" alt="" /> Auth APIs</span>
                 </div>
               </article>
               <article class="stack-card">
@@ -367,7 +401,7 @@
                   <span class="chip" data-tech="premiere"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobepremierepro.svg" alt="" /> Premiere Pro</span>
                   <span class="chip" data-tech="aftereffects"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeaftereffects.svg" alt="" /> After Effects</span>
                   <span class="chip" data-tech="illustrator"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeillustrator.svg" alt="" /> Illustrator</span>
-                  <span class="chip" data-tech="capcut"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/capcut.svg" alt="" /> CapCut</span>
+                  <span class="chip" data-tech="capcut"><img class="icon-svg" src="Assets/icons/capcut.svg" alt="" /> CapCut</span>
                   <span class="chip" data-tech="canva"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/canva.svg" alt="" /> Canva</span>
                 </div>
               </article>
@@ -386,45 +420,47 @@
             </div>
           </div>
 
+          <div class="orb-slot" id="orb-slot">
           <div class="orb-wrap" id="orb-wrap">
             <div class="tech-orb" id="tech-orb">
-              <span class="orb-tag" data-tech="csharp"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/csharp.svg" alt="" /> C#</span>
-              <span class="orb-tag" data-tech="dotnet"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/dotnet.svg" alt="" /> ASP.NET</span>
-              <span class="orb-tag" data-tech="php"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/php.svg" alt="" /> PHP</span>
-              <span class="orb-tag" data-tech="python"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/python.svg" alt="" /> Python</span>
-              <span class="orb-tag" data-tech="javascript"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/javascript.svg" alt="" /> JavaScript</span>
-              <span class="orb-tag" data-tech="html5"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/html5.svg" alt="" /> HTML</span>
-              <span class="orb-tag" data-tech="css3"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/css3.svg" alt="" /> CSS</span>
-              <span class="orb-tag" data-tech="gdscript"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> GDScript</span>
-              <span class="orb-tag" data-tech="pandas"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pandas.svg" alt="" /> pandas</span>
-              <span class="orb-tag" data-tech="numpy"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/numpy.svg" alt="" /> NumPy</span>
-              <span class="orb-tag" data-tech="opencv"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/opencv.svg" alt="" /> OpenCV</span>
-              <span class="orb-tag" data-tech="easyocr"><img class="icon-svg" src="Assets/icons/easyocr.svg" alt="" /> EasyOCR</span>
-              <span class="orb-tag" data-tech="pytesseract"><img class="icon-svg" src="Assets/icons/pytesseract.svg" alt="" /> Pytesseract</span>
-              <span class="orb-tag" data-tech="rest"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/swagger.svg" alt="" /> REST</span>
-              <span class="orb-tag" data-tech="auth"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/oauth.svg" alt="" /> Auth APIs</span>
-              <span class="orb-tag" data-tech="sql"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/sqlite.svg" alt="" /> SQL</span>
-              <span class="orb-tag" data-tech="postgresql"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/postgresql.svg" alt="" /> PostgreSQL</span>
-              <span class="orb-tag" data-tech="firebase"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/firebase.svg" alt="" /> Firebase</span>
-              <span class="orb-tag" data-tech="powerbi"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/powerbi.svg" alt="" /> Power BI</span>
-              <span class="orb-tag" data-tech="excel"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoftexcel.svg" alt="" /> Excel</span>
-              <span class="orb-tag" data-tech="colab"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecolab.svg" alt="" /> Colab</span>
-              <span class="orb-tag" data-tech="git"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/git.svg" alt="" /> Git</span>
-              <span class="orb-tag" data-tech="vscode"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/visualstudiocode.svg" alt="" /> VS Code</span>
-              <span class="orb-tag" data-tech="figma"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="" /> Figma</span>
-              <span class="orb-tag" data-tech="godotengine"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> Godot</span>
-              <span class="orb-tag" data-tech="trello"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/trello.svg" alt="" /> Trello</span>
-              <span class="orb-tag" data-tech="notion"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/notion.svg" alt="" /> Notion</span>
-              <span class="orb-tag" data-tech="photoshop"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="" /> Photoshop</span>
-              <span class="orb-tag" data-tech="premiere"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobepremierepro.svg" alt="" /> Premiere</span>
-              <span class="orb-tag" data-tech="aftereffects"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeaftereffects.svg" alt="" /> After Effects</span>
-              <span class="orb-tag" data-tech="illustrator"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeillustrator.svg" alt="" /> Illustrator</span>
-              <span class="orb-tag" data-tech="capcut"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/capcut.svg" alt="" /> CapCut</span>
-              <span class="orb-tag" data-tech="canva"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/canva.svg" alt="" /> Canva</span>
-              <span class="orb-tag" data-tech="pytorch"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pytorch.svg" alt="" /> PyTorch</span>
-              <span class="orb-tag" data-tech="aws"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/amazonaws.svg" alt="" /> AWS</span>
-              <span class="orb-tag" data-tech="gcp"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecloud.svg" alt="" /> GCP</span>
+              <span class="orb-tag" data-tech="csharp"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/csharp.svg" alt="" /> C#</span>
+              <span class="orb-tag" data-tech="dotnet"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/dotnet.svg" alt="" /> ASP.NET</span>
+              <span class="orb-tag" data-tech="php"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/php.svg" alt="" /> PHP</span>
+              <span class="orb-tag" data-tech="python"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/python.svg" alt="" /> Python</span>
+              <span class="orb-tag" data-tech="javascript"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/javascript.svg" alt="" /> JavaScript</span>
+              <span class="orb-tag" data-tech="html5"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/html5.svg" alt="" /> HTML</span>
+              <span class="orb-tag" data-tech="css3"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/css3.svg" alt="" /> CSS</span>
+              <span class="orb-tag" data-tech="gdscript"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> GDScript</span>
+              <span class="orb-tag" data-tech="pandas"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pandas.svg" alt="" /> pandas</span>
+              <span class="orb-tag" data-tech="numpy"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/numpy.svg" alt="" /> NumPy</span>
+              <span class="orb-tag" data-tech="opencv"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/opencv.svg" alt="" /> OpenCV</span>
+              <span class="orb-tag" data-tech="easyocr"><img class="icon-svg" data-src="Assets/icons/easyocr.svg" alt="" /> EasyOCR</span>
+              <span class="orb-tag" data-tech="pytesseract"><img class="icon-svg" data-src="Assets/icons/pytesseract.svg" alt="" /> Pytesseract</span>
+              <span class="orb-tag" data-tech="rest"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/swagger.svg" alt="" /> REST</span>
+              <span class="orb-tag" data-tech="auth"><img class="icon-svg" data-src="Assets/icons/oauth.svg" alt="" /> Auth APIs</span>
+              <span class="orb-tag" data-tech="sql"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/sqlite.svg" alt="" /> SQL</span>
+              <span class="orb-tag" data-tech="postgresql"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/postgresql.svg" alt="" /> PostgreSQL</span>
+              <span class="orb-tag" data-tech="firebase"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/firebase.svg" alt="" /> Firebase</span>
+              <span class="orb-tag" data-tech="powerbi"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/powerbi.svg" alt="" /> Power BI</span>
+              <span class="orb-tag" data-tech="excel"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoftexcel.svg" alt="" /> Excel</span>
+              <span class="orb-tag" data-tech="colab"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecolab.svg" alt="" /> Colab</span>
+              <span class="orb-tag" data-tech="git"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/git.svg" alt="" /> Git</span>
+              <span class="orb-tag" data-tech="vscode"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/visualstudiocode.svg" alt="" /> VS Code</span>
+              <span class="orb-tag" data-tech="figma"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="" /> Figma</span>
+              <span class="orb-tag" data-tech="godotengine"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> Godot</span>
+              <span class="orb-tag" data-tech="trello"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/trello.svg" alt="" /> Trello</span>
+              <span class="orb-tag" data-tech="notion"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/notion.svg" alt="" /> Notion</span>
+              <span class="orb-tag" data-tech="photoshop"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="" /> Photoshop</span>
+              <span class="orb-tag" data-tech="premiere"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobepremierepro.svg" alt="" /> Premiere</span>
+              <span class="orb-tag" data-tech="aftereffects"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeaftereffects.svg" alt="" /> After Effects</span>
+              <span class="orb-tag" data-tech="illustrator"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeillustrator.svg" alt="" /> Illustrator</span>
+              <span class="orb-tag" data-tech="capcut"><img class="icon-svg" data-src="Assets/icons/capcut.svg" alt="" /> CapCut</span>
+              <span class="orb-tag" data-tech="canva"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/canva.svg" alt="" /> Canva</span>
+              <span class="orb-tag" data-tech="pytorch"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pytorch.svg" alt="" /> PyTorch</span>
+              <span class="orb-tag" data-tech="aws"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/amazonaws.svg" alt="" /> AWS</span>
+              <span class="orb-tag" data-tech="gcp"><img class="icon-svg" data-src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecloud.svg" alt="" /> GCP</span>
             </div>
+          </div>
           </div>
         </div>
       </section>
@@ -724,6 +760,8 @@
                 <img
                   src="Assets/topcit-preview.png"
                   alt="TOPCIT Level 2 certificate for Ryan Barlan"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <span>Click to enlarge</span>
               </button>
@@ -799,7 +837,7 @@
           <h3 id="cert-modal-title">TOPCIT Certificate</h3>
           <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
         </div>
-        <img src="Assets/topcit-preview.png" alt="TOPCIT Level 2 certificate" />
+        <img data-src="Assets/topcit-preview.png" alt="TOPCIT Level 2 certificate" />
         <a
           class="btn btn-primary"
           href="Assets/TOPCIT%20-%20CERTIFICATE.pdf"
@@ -817,7 +855,7 @@
           <h3 id="resume-modal-title">Resume</h3>
           <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
         </div>
-        <img src="Assets/resume-preview.png" alt="Ryan Barlan resume" />
+        <img data-src="Assets/resume-preview.png" alt="Ryan Barlan resume" />
         <a
           class="btn btn-primary"
           href="Assets/Ryan%20Barlan%20-%20Resume.pdf"
@@ -828,7 +866,16 @@
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="js/main.js"></script>
+    <script>
+      (function () {
+        function load(src, done) {
+          var s = document.createElement("script");
+          s.src = src;
+          s.onload = done || function () {};
+          document.body.appendChild(s);
+        }
+        load("js/main.js");
+      })();
+    </script>
   </body>
 </html>

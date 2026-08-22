@@ -1,6 +1,7 @@
 (function () {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  const lite = !!window.__LITE || reduceMotion;
 
   if (isTouch) document.body.classList.add("touch");
 
@@ -50,6 +51,10 @@
   });
 
   document.querySelectorAll("img.icon-svg").forEach((img) => {
+    if (img.getAttribute("src")) {
+      img.loading = "lazy";
+      img.decoding = "async";
+    }
     img.addEventListener("error", () => {
       const mark = document.createElement("span");
       mark.className = "icon-fallback";
@@ -98,25 +103,83 @@
   const jobObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("visible");
-        jobObserver.unobserve(entry.target);
+        entry.target.classList.toggle("visible", entry.isIntersecting);
       });
     },
-    { threshold: 0.42, rootMargin: "0px 0px -18% 0px" }
+    { threshold: 0.32, rootMargin: "0px 0px -16% 0px" }
   );
 
-  document.querySelectorAll(".job").forEach((el) => jobObserver.observe(el));
+  document.querySelectorAll(".job").forEach((el) => {
+    jobObserver.observe(el);
+    const card = el.querySelector(".job-card");
+    if (!card) return;
+
+    function toggleJob() {
+      const open = el.classList.toggle("is-open");
+      card.setAttribute("aria-expanded", open ? "true" : "false");
+      const more = card.querySelector(".job-more");
+      if (more) more.textContent = open ? "Show less" : "Read more";
+      window.setTimeout(layoutLadder, 80);
+      window.setTimeout(layoutLadder, 480);
+    }
+
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return;
+      toggleJob();
+    });
+    card.addEventListener("keydown", (e) => {
+      if (e.target.closest("a")) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleJob();
+      }
+    });
+  });
 
   const timeline = document.getElementById("timeline");
-  const timelineProgress = document.getElementById("timeline-progress");
+  const ladderTrack = document.getElementById("ladder-track");
+  const ladderProgress = document.getElementById("ladder-progress");
+  const ladderRail = document.getElementById("ladder-rail");
+  let ladderLength = 0;
+
+  function layoutLadder() {
+    if (!timeline || !ladderTrack || !ladderProgress || !ladderRail) return;
+    const w = Math.max(1, timeline.clientWidth);
+    const h = Math.max(1, timeline.clientHeight);
+    ladderRail.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    ladderRail.setAttribute("width", String(w));
+    ladderRail.setAttribute("height", String(h));
+    ladderRail.setAttribute("preserveAspectRatio", "xMinYMin meet");
+
+    const snap = (n) => Math.round(n) + 0.5;
+    const dots = [...timeline.querySelectorAll(".job-dot")].map((dot) => {
+      const job = dot.closest(".job");
+      return {
+        x: snap((job?.offsetLeft || 0) + dot.offsetLeft + dot.offsetWidth / 2),
+        y: snap((job?.offsetTop || 0) + dot.offsetTop + dot.offsetHeight / 2),
+      };
+    });
+    if (!dots.length) return;
+
+    const stileX = snap(Math.max(8, Math.min(...dots.map((d) => d.x)) - 20));
+    let path = `M ${stileX} ${dots[0].y} H ${dots[0].x}`;
+    for (let i = 1; i < dots.length; i += 1) {
+      path += ` M ${stileX} ${dots[i - 1].y} V ${dots[i].y} H ${dots[i].x}`;
+    }
+
+    ladderTrack.setAttribute("d", path);
+    ladderProgress.setAttribute("d", path);
+    ladderLength = ladderProgress.getTotalLength();
+    ladderProgress.style.strokeDasharray = `${ladderLength}`;
+    updateTimeline();
+  }
 
   function updateTimeline() {
-    if (!timeline || !timelineProgress) return;
+    if (!timeline || !ladderProgress || !ladderLength) return;
     const rect = timeline.getBoundingClientRect();
-    const start = window.innerHeight * 0.72;
-    const visible = Math.min(Math.max(start - rect.top, 0), rect.height);
-    timelineProgress.style.height = `${visible}px`;
+    const start = window.innerHeight * 0.7;
+    const t = Math.min(1, Math.max(0, (start - rect.top) / Math.max(rect.height, 1)));
+    ladderProgress.style.strokeDashoffset = String(ladderLength * (1 - t));
   }
 
   function onScroll() {
@@ -143,7 +206,7 @@
     if (current && current !== onScroll.last) {
       onScroll.last = current;
       const flash = document.getElementById("cut-flash");
-      if (flash && !reduceMotion) {
+      if (flash && !reduceMotion && !lite) {
         flash.classList.remove("on");
         void flash.offsetWidth;
         flash.classList.add("on");
@@ -153,33 +216,43 @@
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", layoutLadder);
+  if (timeline && typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(layoutLadder).observe(timeline);
+  }
   onScroll.last = sections[0]?.id;
   onScroll();
+  layoutLadder();
 
-  if (!isTouch && !reduceMotion) {
+  if (!isTouch && !reduceMotion && !lite) {
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let curX = mouseX;
     let curY = mouseY;
 
+    let cursorRaf = 0;
+    const tickCursor = () => {
+      curX += (mouseX - curX) * 0.18;
+      curY += (mouseY - curY) * 0.18;
+      cursor.style.transform = `translate(${curX}px, ${curY}px) translate(-50%, -50%)`;
+      if (Math.abs(mouseX - curX) > 0.4 || Math.abs(mouseY - curY) > 0.4) {
+        cursorRaf = requestAnimationFrame(tickCursor);
+      } else {
+        cursorRaf = 0;
+      }
+    };
+
     window.addEventListener("mousemove", (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
       cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-    });
+      if (!cursorRaf) cursorRaf = requestAnimationFrame(tickCursor);
+    }, { passive: true });
 
     document.querySelectorAll("[data-cursor], a, button").forEach((el) => {
       el.addEventListener("mouseenter", () => cursor.classList.add("hover"));
       el.addEventListener("mouseleave", () => cursor.classList.remove("hover"));
     });
-
-    const tickCursor = () => {
-      curX += (mouseX - curX) * 0.18;
-      curY += (mouseY - curY) * 0.18;
-      cursor.style.transform = `translate(${curX}px, ${curY}px) translate(-50%, -50%)`;
-      requestAnimationFrame(tickCursor);
-    };
-    tickCursor();
 
     document.querySelectorAll(".btn").forEach((btn) => {
       btn.addEventListener("mousemove", (e) => {
@@ -207,7 +280,7 @@
   }
 
   document.querySelectorAll("[data-tilt]").forEach((card) => {
-    if (reduceMotion || isTouch) return;
+    if (reduceMotion || isTouch || lite) return;
     card.addEventListener("mousemove", (e) => {
       const rect = card.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
@@ -221,11 +294,12 @@
 
   const orb = document.getElementById("tech-orb");
   const orbWrap = document.getElementById("orb-wrap");
+  const orbSlot = document.getElementById("orb-slot");
+  let zoomSpread = 1;
+  let orbLive = true;
 
-  function initOrb(orbEl, wrapEl, options) {
+  function initOrb(orbEl, wrapEl) {
     if (!orbEl || !wrapEl) return;
-    const opts = options || {};
-    const spread = opts.spread || (() => 1);
     const tags = [...orbEl.querySelectorAll(".orb-tag")];
     const n = tags.length;
     const items = tags.map((el, i) => {
@@ -246,40 +320,24 @@
     let targetExtraY = 0;
     let targetExtraX = 0;
 
-    if (!opts.static) {
-      wrapEl.addEventListener("mousemove", (e) => {
-        const r = wrapEl.getBoundingClientRect();
-        targetExtraY = ((e.clientX - r.left) / r.width - 0.5) * 0.7;
-        targetExtraX = ((e.clientY - r.top) / r.height - 0.5) * 0.45;
-      });
-      wrapEl.addEventListener("mouseleave", () => {
-        targetExtraX = 0;
-        targetExtraY = 0;
-      });
-    }
-
-    function radius() {
-      return Math.min(wrapEl.clientWidth, wrapEl.clientHeight) * 0.46 * spread();
-    }
+    wrapEl.addEventListener("mousemove", (e) => {
+      if (wrapEl.classList.contains("is-flying")) return;
+      const r = wrapEl.getBoundingClientRect();
+      targetExtraY = ((e.clientX - r.left) / r.width - 0.5) * 0.7;
+      targetExtraX = ((e.clientY - r.top) / r.height - 0.5) * 0.45;
+    });
+    wrapEl.addEventListener("mouseleave", () => {
+      targetExtraX = 0;
+      targetExtraY = 0;
+    });
 
     function render() {
-      let ay;
-      let ax;
-      if (opts.follow) {
-        ay = opts.follow.ay;
-        ax = opts.follow.ax;
-      } else {
-        extraY += (targetExtraY - extraY) * 0.08;
-        extraX += (targetExtraX - extraX) * 0.08;
-        if (!reduceMotion) rotY += opts.speed || 0.005;
-        ay = rotY + extraY;
-        ax = rotX + extraX;
-        if (opts.publish) {
-          opts.publish.ay = ay;
-          opts.publish.ax = ax;
-        }
-      }
-      const r = radius();
+      extraY += (targetExtraY - extraY) * 0.08;
+      extraX += (targetExtraX - extraX) * 0.08;
+      if (!reduceMotion) rotY += 0.005;
+      const ay = rotY + extraY;
+      const ax = rotX + extraX;
+      const r = Math.min(wrapEl.clientWidth, wrapEl.clientHeight) * 0.46 * zoomSpread;
 
       items.forEach((item) => {
         const x1 = item.x * Math.cos(ay) - item.z * Math.sin(ay);
@@ -287,31 +345,42 @@
         const y1 = item.y * Math.cos(ax) - z1 * Math.sin(ax);
         const z2 = item.y * Math.sin(ax) + z1 * Math.cos(ax);
         const depth = (z2 + 1) / 2;
-        const scale = 0.78 + depth * 0.28;
+        const scale = 0.82 + depth * 0.24;
         item.el.style.transform = `translate(-50%, -50%) translate3d(${x1 * r}px, ${y1 * r}px, ${z2 * r}px) scale(${scale})`;
-        item.el.style.opacity = String(0.42 + depth * 0.58);
+        item.el.style.opacity = String(0.72 + depth * 0.28);
         item.el.style.zIndex = String(Math.round(depth * 100));
       });
     }
 
+    let orbRaf = 0;
     function frame() {
-      if (!opts.idle || !opts.idle()) render();
-      requestAnimationFrame(frame);
+      if (!orbLive || document.hidden) {
+        orbRaf = 0;
+        return;
+      }
+      render();
+      orbRaf = requestAnimationFrame(frame);
     }
 
-    frame();
-    return { render };
+    function startOrb() {
+      if (!orbRaf) orbRaf = requestAnimationFrame(frame);
+    }
+
+    startOrb();
+    return { render, start: startOrb };
   }
 
-  const orbPhase = { ay: 0, ax: 0.18 };
-  initOrb(orb, orbWrap, { publish: orbPhase });
+  function hydrateOrbIcons() {
+    orbWrap?.querySelectorAll("img[data-src]").forEach((img) => {
+      if (!img.getAttribute("src")) img.src = img.dataset.src;
+    });
+  }
+
+  const orbApi = initOrb(orb, orbWrap);
 
   const techZoom = document.getElementById("tech-zoom");
-  const zoomOrb = document.getElementById("zoom-orb");
-  const zoomLayer = document.getElementById("zoom-orb-layer");
   const zoomCaption = document.getElementById("zoom-caption");
-  let zoomSpread = 1;
-  let zoomActive = false;
+  const stacksSection = document.getElementById("stacks");
 
   function easeOut(v) {
     return 1 - Math.pow(1 - v, 3);
@@ -321,66 +390,60 @@
     return Math.min(1, Math.max(0, v));
   }
 
-  if (techZoom && zoomOrb && zoomLayer && orb && orbWrap && !reduceMotion) {
-    orb.querySelectorAll(".orb-tag").forEach((tag) => {
-      const clone = tag.cloneNode(true);
-      clone.removeAttribute("data-tech");
-      zoomOrb.appendChild(clone);
-    });
+  function parkOrb() {
+    if (!orbWrap) return;
+    orbWrap.classList.remove("is-flying");
+    orbWrap.style.cssText = "";
+    zoomSpread = 1;
+    orbWrap.style.opacity = "";
+  }
 
-    const zoomOrbApi = initOrb(zoomOrb, zoomLayer, {
-      static: true,
-      follow: orbPhase,
-      spread: () => zoomSpread,
-      idle: () => !zoomActive,
-    });
-
+  if (techZoom && orbWrap && orbSlot && !reduceMotion) {
     function updateZoom() {
       const total = techZoom.offsetHeight;
       const vh = window.innerHeight;
       if (total <= 0) {
-        zoomActive = false;
-        zoomLayer.style.visibility = "hidden";
-        orbWrap.style.opacity = "";
+        parkOrb();
         return;
       }
 
       const rect = techZoom.getBoundingClientRect();
       const q = clamp01((vh - rect.top) / total);
 
-      if (q <= 0 || q >= 1) {
-        zoomActive = false;
-        zoomLayer.style.visibility = "hidden";
-        zoomLayer.style.opacity = "0";
-        orbWrap.style.opacity = q >= 1 ? "0" : "";
+      if (q <= 0) {
+        parkOrb();
         if (zoomCaption) zoomCaption.style.opacity = "0";
         return;
       }
-      zoomActive = true;
+
+      if (q >= 1) {
+        orbWrap.classList.add("is-flying");
+        orbWrap.style.opacity = "0";
+        if (zoomCaption) zoomCaption.style.opacity = "0";
+        return;
+      }
 
       const pin = clamp01(vh / total);
       const move = easeOut(clamp01((q - pin * 0.2) / (pin * 0.8)));
       const zoom = clamp01((q - pin) / 0.3);
       const exit = clamp01((q - 0.8) / 0.2);
-
-      const source = orbWrap.getBoundingClientRect();
-      const size = Math.min(source.width, source.height);
-      const startX = source.left + source.width / 2;
-      const startY = source.top + source.height / 2;
+      const slot = orbSlot.getBoundingClientRect();
+      const size = Math.min(slot.width, slot.height);
+      const startX = slot.left + slot.width / 2;
+      const startY = slot.top + slot.height / 2;
       const cx = window.innerWidth / 2;
       const cy = vh / 2;
       const px = startX + (cx - startX) * move;
       const py = startY + (cy - startY) * move;
-      const scale = 1 + move * 0.28 + easeOut(zoom) * 0.9 + easeOut(exit) * 1.8;
+      const scale = 1 + move * 0.22 + easeOut(zoom) * (window.innerWidth < 980 ? 0.55 : 0.9) + easeOut(exit) * (window.innerWidth < 980 ? 1.1 : 1.8);
 
-      zoomSpread = 1 + easeOut(zoom) * 0.75;
-      zoomLayer.style.visibility = "visible";
-      zoomLayer.style.opacity = String(1 - exit);
-      zoomLayer.style.width = `${size}px`;
-      zoomLayer.style.height = `${size}px`;
-      zoomLayer.style.transform = `translate3d(${px - size / 2}px, ${py - size / 2}px, 0) scale(${scale})`;
-      orbWrap.style.opacity = "0";
-      zoomOrbApi?.render();
+      zoomSpread = 1 + easeOut(zoom) * 0.55;
+      orbWrap.classList.add("is-flying");
+      orbWrap.style.opacity = String(1 - exit);
+      orbWrap.style.width = `${size}px`;
+      orbWrap.style.height = `${size}px`;
+      orbWrap.style.transform = `translate3d(${px - size / 2}px, ${py - size / 2}px, 0) scale(${scale})`;
+      orbApi?.render();
 
       if (zoomCaption) {
         const show = clamp01((q - pin - 0.06) / 0.2) * (1 - clamp01((q - 0.84) / 0.16));
@@ -393,6 +456,25 @@
     window.addEventListener("resize", updateZoom);
     updateZoom();
   }
+
+  if (stacksSection && orbWrap) {
+    const orbWatch = new IntersectionObserver(
+      (entries) => {
+        orbLive = entries.some((entry) => entry.isIntersecting) || orbWrap.classList.contains("is-flying");
+        if (orbLive) {
+          hydrateOrbIcons();
+          orbApi?.start();
+        }
+      },
+      { rootMargin: "20% 0px" }
+    );
+    orbWatch.observe(stacksSection);
+    if (techZoom) orbWatch.observe(techZoom);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && orbLive) orbApi?.start();
+  });
 
   document.querySelectorAll(".chip[data-tech], .orb-tag[data-tech]").forEach((el) => {
     el.addEventListener("mouseenter", () => {
@@ -411,6 +493,9 @@
 
   function openModal(modal) {
     if (!modal) return;
+    modal.querySelectorAll("img[data-src]").forEach((img) => {
+      if (!img.getAttribute("src")) img.src = img.dataset.src;
+    });
     modal.hidden = false;
     document.body.style.overflow = "hidden";
   }
@@ -441,16 +526,21 @@
 
   function initScene() {
     const canvas = document.getElementById("bg-canvas");
-    if (!canvas || typeof THREE === "undefined") return;
+    if (lite || !canvas || typeof THREE === "undefined") return;
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
       alpha: true,
-      powerPreference: "high-performance",
+      powerPreference: "low-power",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+
+    function sizeRenderer() {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    sizeRenderer();
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -487,7 +577,7 @@
       return new THREE.ExtrudeGeometry(shape, {
         depth: depth || 0.08,
         bevelEnabled: false,
-        curveSegments: 16,
+        curveSegments: 12,
       });
     }
 
@@ -530,7 +620,7 @@
 
     function oval(rx, ry) {
       const curve = new THREE.EllipseCurve(0, 0, rx, ry, 0, Math.PI * 2, false, 0);
-      return new THREE.Shape(curve.getPoints(32));
+      return new THREE.Shape(curve.getPoints(24));
     }
 
     function arrow(from, to, color) {
@@ -557,7 +647,7 @@
     const defaultGroup = new THREE.Group();
     const ico = wire(new THREE.IcosahedronGeometry(1.35, 1), gold, 0.22);
     ico.position.set(3.6, 0.9, -1.4);
-    const torus = wire(new THREE.TorusGeometry(0.74, 0.14, 16, 64), red, 0.3);
+    const torus = wire(new THREE.TorusGeometry(0.74, 0.14, 14, 48), red, 0.3);
     torus.position.set(-3.8, -1.2, -1.8);
     defaultGroup.add(ico, torus);
     group.add(defaultGroup);
@@ -570,7 +660,7 @@
     const processA = outline(extrude(roundedRect(1.1, 0.6, 0.1)), goldSoft, 0.42);
     const decision = outline(extrude(diamond(0.95, 1.02)), red, 0.46);
     const ioNode = outline(extrude(parallelogram(1.12, 0.56, 0.2)), goldSoft, 0.42);
-    const dbNode = outline(new THREE.CylinderGeometry(0.36, 0.36, 0.54, 20), red, 0.4);
+    const dbNode = outline(new THREE.CylinderGeometry(0.36, 0.36, 0.54, 16), red, 0.4);
     const endNode = outline(extrude(oval(0.52, 0.28)), gold, 0.44);
 
     const flowNodes = [startNode, processA, decision, ioNode, dbNode, endNode];
@@ -601,7 +691,7 @@
     group.add(flow);
 
     const aboutGroup = new THREE.Group();
-    const globe = wire(new THREE.SphereGeometry(0.95, 18, 12), gold, 0.24);
+    const globe = wire(new THREE.SphereGeometry(0.95, 16, 12), gold, 0.24);
     globe.position.set(3.5, 0.85, -1.25);
 
     const book = new THREE.Group();
@@ -614,7 +704,7 @@
     book.add(pageL, pageR);
     book.position.set(-3.65, -0.55, -1.15);
 
-    const medal = outline(new THREE.TorusGeometry(0.52, 0.08, 12, 36), red, 0.4);
+    const medal = outline(new THREE.TorusGeometry(0.52, 0.08, 10, 28), red, 0.4);
     medal.position.set(-3.55, 1.65, -0.95);
 
     const dodeca = wire(new THREE.DodecahedronGeometry(0.52), goldSoft, 0.28);
@@ -633,8 +723,9 @@
       { mesh: book, rx: 0.02, ry: 0.06, rz: 0, bx: 0, by: 0, bz: 0 },
     ];
 
-    const stacksSection = document.getElementById("stacks");
+    const projectsSection = document.getElementById("projects");
     const aboutSection = document.getElementById("about");
+    const stacksBg = document.getElementById("stacks");
     const travel = 8.5;
 
     function sectionOffset(el) {
@@ -650,7 +741,7 @@
       return Math.max(0, 1 - Math.abs(offset) / 0.75);
     }
 
-    const count = reduceMotion ? 180 : 560;
+    const count = 80;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count * 3; i += 1) {
       positions[i] = (Math.random() - 0.5) * 18;
@@ -684,15 +775,17 @@
     window.addEventListener("resize", () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      sizeRenderer();
       fitFlow();
     });
 
     fitFlow();
 
     const clock = new THREE.Clock();
+    let sceneRaf = 0;
+    let lastFrame = 0;
 
-    function animate() {
+    function draw() {
       const t = clock.getElapsedTime();
       if (!reduceMotion) {
         spinners.forEach((item) => {
@@ -708,13 +801,20 @@
         camera.lookAt(0, 0, 0);
       }
 
-      const dStacks = sectionOffset(stacksSection);
+      const dProjects = sectionOffset(projectsSection);
       const dAbout = sectionOffset(aboutSection);
-      const nearStacks = placeLayer(flow, dStacks);
+      const dStacks = sectionOffset(stacksBg);
+      const nearProjects = placeLayer(flow, dProjects);
       const nearAbout = placeLayer(aboutGroup, dAbout);
-      const lead = nearStacks >= nearAbout ? { amount: nearStacks, d: dStacks } : { amount: nearAbout, d: dAbout };
-      defaultGroup.position.y = lead.amount * travel * (lead.d >= 0 ? 1 : -1);
-      defaultGroup.visible = lead.amount < 0.92;
+      const nearStacks = Math.max(0, 1 - Math.abs(dStacks) / 0.75);
+      const lead = nearProjects >= nearAbout
+        ? { amount: nearProjects, d: dProjects }
+        : { amount: nearAbout, d: dAbout };
+      const push = Math.max(lead.amount, nearStacks);
+      const dir = push === nearStacks ? (dStacks >= 0 ? 1 : -1) : (lead.d >= 0 ? 1 : -1);
+      defaultGroup.position.y = push * travel * dir;
+      defaultGroup.visible = push < 0.92 && nearStacks < 0.55;
+      points.visible = nearStacks < 0.45;
 
       if (flow.visible && !reduceMotion) {
         const u = (t * 0.13) % 1;
@@ -732,11 +832,47 @@
       }
 
       renderer.render(scene, camera);
-      requestAnimationFrame(animate);
     }
 
-    animate();
+    function animate(now) {
+      if (document.hidden) {
+        sceneRaf = 0;
+        return;
+      }
+      sceneRaf = requestAnimationFrame(animate);
+      if (now - lastFrame < 20) return;
+      lastFrame = now;
+      draw();
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        cancelAnimationFrame(sceneRaf);
+        sceneRaf = 0;
+        return;
+      }
+      if (!sceneRaf) animate(performance.now());
+    });
+
+    animate(performance.now());
   }
 
-  initScene();
+  function loadThreeThenInit() {
+    if (lite || reduceMotion) return;
+    const start = () => {
+      if (window.THREE) {
+        initScene();
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+      script.async = true;
+      script.onload = initScene;
+      document.body.appendChild(script);
+    };
+    const idle = window.requestIdleCallback || ((cb) => window.setTimeout(cb, 1400));
+    idle(start, { timeout: 2200 });
+  }
+
+  loadThreeThenInit();
 })();
