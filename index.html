@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en" class="is-loading">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portfolio of Ryan Paolo E. Barlan — Cum Laude BSIT graduate, software developer, and builder of functional software solutions."
+    />
+    <title>Ryan Barlan — Software Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+      html.is-loading { overflow: hidden; }
+      .page-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 20000;
+        background: #07070b;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="page-loader"
+      id="page-loader"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Loading portfolio"
+    >
+      <div class="loader-scan" aria-hidden="true"></div>
+      <div class="loader-inner">
+        <p class="loader-kicker"><i></i> Standby</p>
+        <div class="loader-mark-wrap" aria-hidden="true">
+          <span class="loader-ring"></span>
+          <span class="loader-ring loader-ring-delay"></span>
+          <span class="loader-mark">RB<span>.</span></span>
+        </div>
+        <p class="loader-label">Loading</p>
+        <div class="loader-bar" aria-hidden="true">
+          <span class="loader-fill" id="loader-fill"></span>
+        </div>
+        <p class="loader-pct" id="loader-pct">00%</p>
+      </div>
+    </div>
+    <canvas class="bg-canvas" id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="letterbox letterbox-top" aria-hidden="true"></div>
+    <div class="letterbox letterbox-bottom" aria-hidden="true"></div>
+    <div class="film-side film-left" aria-hidden="true"></div>
+    <div class="film-side film-right" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="light-leak" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="cut-flash" id="cut-flash" aria-hidden="true"></div>
+    <div class="ruler" aria-hidden="true"></div>
+    <div class="hud" aria-hidden="true">
+      <span class="hud-rec"><i></i> REC</span>
+      <span class="timecode" id="timecode">01:00:00:00</span>
+    </div>
+    <div class="zoom-orb-layer" id="zoom-orb-layer" aria-hidden="true">
+      <div class="tech-orb" id="zoom-orb"></div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <header class="nav" id="nav">
+      <a class="logo" href="#welcome" data-cursor>RB<span>.</span></a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#welcome" data-cursor>Welcome</a></li>
+        <li><a href="#work" data-cursor>Work</a></li>
+        <li><a href="#stacks" data-cursor>Tech</a></li>
+        <li><a href="#projects" data-cursor>Projects</a></li>
+        <li><a href="#about" data-cursor>About</a></li>
+        <li><a href="#social" data-cursor>Social</a></li>
+      </ul>
+    </header>
+
+    <main>
+      <section class="section" id="welcome">
+        <div class="wrap hero">
+          <div class="hero-copy">
+            <p class="kicker">Welcome</p>
+            <h1 class="title-chroma" data-text="Ryan Barlan">Ryan Barlan</h1>
+            <p class="role-line">
+              Software Developer · BS Information Technology
+              <em>Cum Laude</em>
+            </p>
+            <p>
+              Cum Laude BSIT graduate (Business Analytics) who ships usable
+              software — full-stack web systems, data automation, and
+              analytics-driven products. I like turning messy real-world
+              processes into tools a team can actually run every day.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#work" data-cursor>See my work</a>
+              <a class="btn btn-ghost" href="#about" data-cursor>About me</a>
+              <button class="btn btn-ghost" type="button" id="resume-open" data-cursor>
+                Resume
+              </button>
+            </div>
+            <div class="hero-meta">
+              <div>
+                <strong>Based in</strong>
+                Calamba City, Laguna
+              </div>
+              <div>
+                <strong>Currently</strong>
+                Part-Time Software Developer, LSN Engineering
+              </div>
+              <div>
+                <strong>School</strong>
+                Batangas State University — The National Engineering University, JPLPC Malvar Campus
+              </div>
+              <div>
+                <strong>Open to</strong>
+                Full-time · on-site, remote, or hybrid
+                <span class="meta-tags">Software · Full-stack · Automation · Solutions · Video editing</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual" id="hero-visual">
+            <div class="avatar-stage" id="avatar-stage">
+              <div class="avatar-float">
+                <div class="avatar-ring"></div>
+                <div class="avatar-frame">
+                  <img
+                    src="Assets/avatar.png"
+                    alt="Ryan Paolo E. Barlan in graduation attire"
+                    id="avatar-img"
+                  />
+                </div>
+                <div class="badge-3d one">
+                  <strong>Cum Laude</strong><br />BSIT · Business Analytics
+                </div>
+                <div class="badge-3d two">
+                  <strong>Full-stack</strong><br />C# · JS · Python · PHP<br />SQL · HTML · CSS
+                </div>
+                <div class="badge-3d three">
+                  <strong>Video editing</strong><br />Premiere · After Effects · CapCut
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="work">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <p class="kicker">Experience</p>
+            <h2>Work that shipped.</h2>
+            <p class="lede">
+              From full-stack product work to audit automation and creative
+              production — roles where I had to build, coordinate, and deliver.
+            </p>
+          </div>
+
+          <div class="timeline" id="timeline">
+            <div class="timeline-line" aria-hidden="true">
+              <div class="timeline-progress" id="timeline-progress"></div>
+            </div>
+
+            <article class="job">
+              <span class="job-dot" aria-hidden="true"></span>
+              <div class="job-card">
+                <div class="job-top">
+                  <p class="job-role">Software Developer · Part-Time · Remote</p>
+                  <p class="job-dates">Sept 2025 — Present</p>
+                </div>
+                <h3>LSN Engineering Pte. Ltd.</h3>
+                <ul>
+                  <li>
+                    Building the LSN System, a production HR and operations
+                    platform for Singapore construction manpower: employee
+                    records, daily time entry with overtime, leave, training,
+                    payroll, client billing, and foreign-worker levy files.
+                  </li>
+                  <li>
+                    Writing C# back-end logic and ASP.NET Core Razor Pages,
+                    with HTML, CSS, and JavaScript for the interfaces staff
+                    use on the job.
+                  </li>
+                  <li>
+                    Designing PostgreSQL schemas and role-based access (site
+                    worker, office, admin) so two companies — LSN Engineering
+                    and Chang Sheng Contractors — can share one codebase with
+                    separate databases and branding.
+                  </li>
+                  <li>
+                    Delivering operational outputs, not just screens: Excel
+                    payroll/billing workbooks, PDF payslips, and audit-friendly
+                    activity logs.
+                  </li>
+                  <li>
+                    Built the internal API as Razor Page handlers (JSON and
+                    file responses on <code>?handler=</code> routes) for time
+                    entry, employees, payroll, and related modules — not a
+                    separate public REST service.
+                  </li>
+                </ul>
+                <div class="job-links">
+                  <a href="https://lsn-engineering.com/" target="_blank" rel="noopener" data-cursor>Company website</a>
+                  <a href="https://linkedin.com/company/lsn-engineering-pte-ltd" target="_blank" rel="noopener" data-cursor>Company LinkedIn</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="job">
+              <span class="job-dot" aria-hidden="true"></span>
+              <div class="job-card">
+                <div class="job-top">
+                  <p class="job-role">Internal Audit Intern</p>
+                  <p class="job-dates">Feb 2026 — June 2026</p>
+                </div>
+                <h3>Vantage Financial Corporation</h3>
+                <ul>
+                  <li>
+                    Learned the audit workflow by doing it manually first —
+                    branch transaction reviews, CCTV monitoring, and
+                    coordinating with branch staff — so I could see where the
+                    real bottlenecks were before writing any automation.
+                  </li>
+                  <li>
+                    Used Google Colab to run Python — pandas and NumPy for
+                    cleaning tables, OpenCV, EasyOCR, and Pytesseract for
+                    reading text from images and PDFs, plus Excel files — so
+                    the audit team could work from structured data instead of
+                    screenshots.
+                  </li>
+                  <li>
+                    Wrote Google Apps Script (JavaScript) to automate recurring
+                    Google Sheets work, including flagging cancelled
+                    transactions that reviewers previously had to hunt for by
+                    hand.
+                  </li>
+                  <li>
+                    Picked up Excel and Google Sheets shortcuts on the job, and
+                    built spreadsheet formulas to clean and organize files —
+                    filtering out rows we did not need, then pulling cleaned
+                    data from an old sheet into a new working sheet so the team
+                    did not have to copy-paste by hand.
+                  </li>
+                  <li>
+                    That mix of floor work and tooling sharpened how I diagnose
+                    a process, explain a technical fix to non-engineering
+                    teammates, and pick up a new stack quickly enough to ship
+                    something useful in a short internship.
+                  </li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="job">
+              <span class="job-dot" aria-hidden="true"></span>
+              <div class="job-card">
+                <div class="job-top">
+                  <p class="job-role">Video Editor · Freelance · Remote</p>
+                  <p class="job-dates">July 2024 — Sept 2024</p>
+                </div>
+                <h3>Nicolas Boucher Online</h3>
+                <ul>
+                  <li>
+                    Edited short-form and long-form videos on generative AI for
+                    business and finance, plus Excel-shortcut tutorials that
+                    were published on social media for
+                    <a href="https://www.youtube.com/@nicolasboucherfinance" target="_blank" rel="noopener">Nicolas Boucher</a>.
+                  </li>
+                  <li>
+                    Owned the edit-to-export pipeline under tight posting
+                    calendars — pacing, captions, and platform-specific
+                    exports — which taught me to protect quality without
+                    missing a deadline.
+                  </li>
+                  <li>
+                    Worked directly with the creator to match brand style,
+                    take notes on what retained viewers, and turn feedback
+                    around the same day when needed.
+                  </li>
+                  <li>
+                    Managed the freelance pipeline in Trello and Notion —
+                    briefs, revision rounds, and delivery dates — so edits
+                    stayed on calendar even when several videos were in
+                    flight at once.
+                  </li>
+                </ul>
+                <div class="job-links">
+                  <a href="https://www.youtube.com/@nicolasboucherfinance" target="_blank" rel="noopener" data-cursor>YouTube channel</a>
+                  <a href="https://www.linkedin.com/in/bouchernicolas/" target="_blank" rel="noopener" data-cursor>Nicolas Boucher on LinkedIn</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="stacks">
+        <div class="wrap stack-layout">
+          <div>
+            <div class="section-head reveal">
+              <p class="kicker">Capabilities</p>
+              <h2>Tech I work with.</h2>
+              <p class="lede">
+                A practical stack for shipping software, analyzing data, and
+                producing visual work. The orb keeps spinning — hover to tilt
+                it, or scan the groups.
+              </p>
+            </div>
+            <div class="stack-groups">
+              <article class="stack-card">
+                <h3>Programming &amp; frameworks</h3>
+                <div class="chips">
+                  <span class="chip" data-tech="csharp"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/csharp.svg" alt="" /> C#</span>
+                  <span class="chip" data-tech="dotnet"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/dotnet.svg" alt="" /> ASP.NET</span>
+                  <span class="chip" data-tech="php"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/php.svg" alt="" /> PHP</span>
+                  <span class="chip" data-tech="python"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/python.svg" alt="" /> Python</span>
+                  <span class="chip" data-tech="javascript"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/javascript.svg" alt="" /> JavaScript</span>
+                  <span class="chip" data-tech="html5"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/html5.svg" alt="" /> HTML</span>
+                  <span class="chip" data-tech="css3"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/css3.svg" alt="" /> CSS</span>
+                  <span class="chip" data-tech="gdscript"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> GDScript</span>
+                  <span class="chip" data-tech="pandas"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pandas.svg" alt="" /> pandas</span>
+                  <span class="chip" data-tech="numpy"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/numpy.svg" alt="" /> NumPy</span>
+                  <span class="chip" data-tech="opencv"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/opencv.svg" alt="" /> OpenCV</span>
+                  <span class="chip" data-tech="easyocr"><img class="icon-svg" src="Assets/icons/easyocr.svg" alt="" /> EasyOCR</span>
+                  <span class="chip" data-tech="pytesseract"><img class="icon-svg" src="Assets/icons/pytesseract.svg" alt="" /> Pytesseract</span>
+                  <span class="chip" data-tech="rest"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/swagger.svg" alt="" /> REST APIs</span>
+                  <span class="chip" data-tech="auth"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/oauth.svg" alt="" /> Auth APIs</span>
+                </div>
+              </article>
+              <article class="stack-card">
+                <h3>Databases &amp; data</h3>
+                <div class="chips">
+                  <span class="chip" data-tech="sql"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/sqlite.svg" alt="" /> SQL</span>
+                  <span class="chip" data-tech="postgresql"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/postgresql.svg" alt="" /> PostgreSQL</span>
+                  <span class="chip" data-tech="firebase"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/firebase.svg" alt="" /> Firebase</span>
+                  <span class="chip" data-tech="powerbi"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/powerbi.svg" alt="" /> Power BI</span>
+                  <span class="chip" data-tech="excel"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoftexcel.svg" alt="" /> Excel</span>
+                  <span class="chip" data-tech="colab"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecolab.svg" alt="" /> Google Colab</span>
+                </div>
+              </article>
+              <article class="stack-card">
+                <h3>Tools</h3>
+                <div class="chips">
+                  <span class="chip" data-tech="git"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/git.svg" alt="" /> Git</span>
+                  <span class="chip" data-tech="vscode"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/visualstudiocode.svg" alt="" /> VS Code</span>
+                  <span class="chip" data-tech="figma"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="" /> Figma</span>
+                  <span class="chip" data-tech="godotengine"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> Godot Engine</span>
+                  <span class="chip" data-tech="trello"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/trello.svg" alt="" /> Trello</span>
+                  <span class="chip" data-tech="notion"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/notion.svg" alt="" /> Notion</span>
+                </div>
+              </article>
+              <article class="stack-card">
+                <h3>Digital media</h3>
+                <div class="chips">
+                  <span class="chip" data-tech="photoshop"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="" /> Photoshop</span>
+                  <span class="chip" data-tech="premiere"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobepremierepro.svg" alt="" /> Premiere Pro</span>
+                  <span class="chip" data-tech="aftereffects"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeaftereffects.svg" alt="" /> After Effects</span>
+                  <span class="chip" data-tech="illustrator"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeillustrator.svg" alt="" /> Illustrator</span>
+                  <span class="chip" data-tech="capcut"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/capcut.svg" alt="" /> CapCut</span>
+                  <span class="chip" data-tech="canva"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/canva.svg" alt="" /> Canva</span>
+                </div>
+              </article>
+              <article class="stack-card">
+                <h3>Foundations</h3>
+                <p class="stack-note">
+                  Early working knowledge — enough to follow a project, complete
+                  guided labs, and keep learning on the job.
+                </p>
+                <div class="chips">
+                  <span class="chip" data-tech="pytorch"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pytorch.svg" alt="" /> PyTorch</span>
+                  <span class="chip" data-tech="aws"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/amazonaws.svg" alt="" /> AWS</span>
+                  <span class="chip" data-tech="gcp"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecloud.svg" alt="" /> Google Cloud</span>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="orb-wrap" id="orb-wrap">
+            <div class="tech-orb" id="tech-orb">
+              <span class="orb-tag" data-tech="csharp"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/csharp.svg" alt="" /> C#</span>
+              <span class="orb-tag" data-tech="dotnet"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/dotnet.svg" alt="" /> ASP.NET</span>
+              <span class="orb-tag" data-tech="php"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/php.svg" alt="" /> PHP</span>
+              <span class="orb-tag" data-tech="python"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/python.svg" alt="" /> Python</span>
+              <span class="orb-tag" data-tech="javascript"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/javascript.svg" alt="" /> JavaScript</span>
+              <span class="orb-tag" data-tech="html5"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/html5.svg" alt="" /> HTML</span>
+              <span class="orb-tag" data-tech="css3"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/css3.svg" alt="" /> CSS</span>
+              <span class="orb-tag" data-tech="gdscript"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> GDScript</span>
+              <span class="orb-tag" data-tech="pandas"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pandas.svg" alt="" /> pandas</span>
+              <span class="orb-tag" data-tech="numpy"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/numpy.svg" alt="" /> NumPy</span>
+              <span class="orb-tag" data-tech="opencv"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/opencv.svg" alt="" /> OpenCV</span>
+              <span class="orb-tag" data-tech="easyocr"><img class="icon-svg" src="Assets/icons/easyocr.svg" alt="" /> EasyOCR</span>
+              <span class="orb-tag" data-tech="pytesseract"><img class="icon-svg" src="Assets/icons/pytesseract.svg" alt="" /> Pytesseract</span>
+              <span class="orb-tag" data-tech="rest"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/swagger.svg" alt="" /> REST</span>
+              <span class="orb-tag" data-tech="auth"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/oauth.svg" alt="" /> Auth APIs</span>
+              <span class="orb-tag" data-tech="sql"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/sqlite.svg" alt="" /> SQL</span>
+              <span class="orb-tag" data-tech="postgresql"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/postgresql.svg" alt="" /> PostgreSQL</span>
+              <span class="orb-tag" data-tech="firebase"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/firebase.svg" alt="" /> Firebase</span>
+              <span class="orb-tag" data-tech="powerbi"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/powerbi.svg" alt="" /> Power BI</span>
+              <span class="orb-tag" data-tech="excel"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoftexcel.svg" alt="" /> Excel</span>
+              <span class="orb-tag" data-tech="colab"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecolab.svg" alt="" /> Colab</span>
+              <span class="orb-tag" data-tech="git"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/git.svg" alt="" /> Git</span>
+              <span class="orb-tag" data-tech="vscode"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/visualstudiocode.svg" alt="" /> VS Code</span>
+              <span class="orb-tag" data-tech="figma"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="" /> Figma</span>
+              <span class="orb-tag" data-tech="godotengine"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> Godot</span>
+              <span class="orb-tag" data-tech="trello"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/trello.svg" alt="" /> Trello</span>
+              <span class="orb-tag" data-tech="notion"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/notion.svg" alt="" /> Notion</span>
+              <span class="orb-tag" data-tech="photoshop"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="" /> Photoshop</span>
+              <span class="orb-tag" data-tech="premiere"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobepremierepro.svg" alt="" /> Premiere</span>
+              <span class="orb-tag" data-tech="aftereffects"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeaftereffects.svg" alt="" /> After Effects</span>
+              <span class="orb-tag" data-tech="illustrator"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobeillustrator.svg" alt="" /> Illustrator</span>
+              <span class="orb-tag" data-tech="capcut"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/capcut.svg" alt="" /> CapCut</span>
+              <span class="orb-tag" data-tech="canva"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/canva.svg" alt="" /> Canva</span>
+              <span class="orb-tag" data-tech="pytorch"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pytorch.svg" alt="" /> PyTorch</span>
+              <span class="orb-tag" data-tech="aws"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/amazonaws.svg" alt="" /> AWS</span>
+              <span class="orb-tag" data-tech="gcp"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecloud.svg" alt="" /> GCP</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="tech-zoom" id="tech-zoom" aria-hidden="true">
+        <div class="tech-zoom-stage">
+          <div class="zoom-caption" id="zoom-caption">
+            <p class="kicker">Up next</p>
+            <h2>Things I’ve built.</h2>
+          </div>
+        </div>
+      </div>
+
+      <section class="section" id="projects">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <p class="kicker">Selected work</p>
+            <h2>Projects &amp; builds.</h2>
+            <p class="lede">
+              A mix of product, game, and automation work — each one shipped
+              with a clear problem and a working solution.
+            </p>
+          </div>
+
+          <div class="projects-grid">
+            <article class="project featured reveal" data-tilt>
+              <p class="project-tag">Capstone · 2024 — 2025</p>
+              <h3>Hack Slash</h3>
+              <p>
+                A player-versus-player mobile collectible card game that models
+                cybersecurity threats through analytics-driven card design. I
+                served as game developer, DevOps, and game designer — building
+                mechanics in Godot (GDScript), storing live match state in
+                Firebase Realtime Database, and keeping team builds consistent.
+              </p>
+              <p>
+                <strong>Minimax AI.</strong> Matches are turn-based, so the
+                opponent cannot just pick a random card. Minimax looks ahead at
+                possible moves for both sides and assumes each player will
+                choose the strongest option — maximizing its own score while
+                minimizing yours.
+              </p>
+              <p>
+                <strong>Offline / async matchmaking.</strong> You do not need
+                another player online. Minimax fills that slot as the opponent,
+                and its difficulty scales with your winrate and rank points —
+                a higher rank means a harder match — so the game stays
+                balanced instead of feeling too easy or unfair.
+              </p>
+              <div class="analytics">
+                <div class="analytics-card">
+                  <small>Descriptive</small>
+                  <p>Tracks player win rates so matchmaking can pair decks of similar strength.</p>
+                </div>
+                <div class="analytics-card">
+                  <small>Predictive</small>
+                  <p>Estimates a new deck’s likely win rate from historical results of each card.</p>
+                </div>
+                <div class="analytics-card">
+                  <small>Prescriptive</small>
+                  <p>Highlights the most used, most effective, and highest-win-rate cards to build with.</p>
+                </div>
+              </div>
+              <p class="api-copy">
+                <strong>RESTful APIs.</strong> The live game talks to backend
+                services over HTTP. Firebase Realtime Database is the main REST
+                layer (GET, PUT, PATCH, DELETE) for profiles, decks,
+                matchmaking, leaderboard, store, achievements, and card
+                analytics. Brevo’s REST API sends registration verification
+                emails. Auth uses Firebase Identity Toolkit plus Google OAuth
+                for sign-in and token refresh — no real-money payments.
+              </p>
+              <div class="api-grid">
+                <div class="analytics-card">
+                  <small>REST · Firebase RTDB</small>
+                  <p>Users, decks, rank queries, card stats, achievements.</p>
+                </div>
+                <div class="analytics-card">
+                  <small>REST · Brevo</small>
+                  <p>Transactional email for 6-digit signup codes.</p>
+                </div>
+                <div class="analytics-card">
+                  <small>Auth APIs</small>
+                  <p>Identity Toolkit + Google OAuth 2.0 for login and tokens.</p>
+                </div>
+              </div>
+              <div class="project-tech">
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> Godot</span>
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/firebase.svg" alt="" /> Firebase</span>
+                <span class="chip">REST APIs</span>
+                <span class="chip">Minimax AI</span>
+                <span class="chip">Analytics</span>
+              </div>
+              <div class="project-links">
+                <div class="link-block">
+                  <a
+                    class="btn btn-primary"
+                    href="https://thehackslash.com/"
+                    target="_blank"
+                    rel="noopener"
+                    data-cursor
+                    >More about the game</a
+                  >
+                  <small>thehackslash.com — details and information about Hack Slash</small>
+                </div>
+                <div class="link-block">
+                  <a
+                    class="btn btn-ghost"
+                    href="Assets/Hack%20Slash.apk"
+                    download="Hack-Slash.apk"
+                    data-cursor
+                    >Download Android APK</a
+                  >
+                  <small>Sample build you can install to try a match on a phone</small>
+                </div>
+              </div>
+            </article>
+
+            <article class="project reveal" data-tilt>
+              <p class="project-tag">Product · Ongoing</p>
+              <h3>LSN Employee Management System</h3>
+              <p>
+                Internal HR and payroll platform for
+                <a href="https://lsn-engineering.com/" target="_blank" rel="noopener">LSN Engineering Pte. Ltd.</a>
+                — covering employee lifecycle, daily time entry with OT, leave,
+                training, dormitory assignment, payroll Excel/PDF payslips,
+                client billing, and foreign-worker levy compilation.
+              </p>
+              <p>
+                Dual-company architecture: LSN Engineering and Chang Sheng
+                Contractors share one ASP.NET Core codebase with separate
+                PostgreSQL databases, branding, and session-based role security
+                (site worker, office, admin). Excel via ClosedXML; payslip PDFs
+                via Playwright.
+              </p>
+              <p>
+                <strong>Internal API.</strong> There is no public REST layer.
+                Interactive screens call the same Razor Page with a handler
+                query string (<code>?handler=Name</code>) that returns JSON or
+                files — time entry, employees, payroll, billing, levy, and
+                auth — so the UI and back-end stay in one ASP.NET pipeline.
+              </p>
+              <div class="project-tech">
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/csharp.svg" alt="" /> C#</span>
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/dotnet.svg" alt="" /> ASP.NET</span>
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/postgresql.svg" alt="" /> PostgreSQL</span>
+                <span class="chip">SQL</span>
+                <span class="chip">Internal API</span>
+                <span class="chip">Razor Pages</span>
+              </div>
+              <div class="project-links">
+                <div class="link-block">
+                  <a
+                    class="btn btn-ghost"
+                    href="https://lsn-engineering.com/"
+                    target="_blank"
+                    rel="noopener"
+                    data-cursor
+                    >LSN Engineering website</a
+                  >
+                  <small>lsn-engineering.com — the company this system was built for</small>
+                </div>
+                <div class="link-block">
+                  <a
+                    class="btn btn-ghost"
+                    href="https://linkedin.com/company/lsn-engineering-pte-ltd"
+                    target="_blank"
+                    rel="noopener"
+                    data-cursor
+                    >Company LinkedIn</a
+                  >
+                  <small>linkedin.com/company/lsn-engineering-pte-ltd</small>
+                </div>
+              </div>
+            </article>
+
+            <article class="project reveal" data-tilt>
+              <p class="project-tag">Automation · 2026</p>
+              <h3>Audit Data Pipeline</h3>
+              <p>
+                At Vantage Financial I first learned the review process by
+                hand — branch checks, CCTV, and talking to staff — then
+                automated the slow parts. Python in Google Colab — pandas,
+                NumPy, OpenCV, EasyOCR, and Pytesseract — extracted transaction
+                data from images, PDFs, and Excel files. Google Apps Script
+                handled the Sheets-side workflow, including cancelled-transaction flags
+                for auditors.
+              </p>
+              <p>
+                On the spreadsheet side I learned Excel and Google Sheets
+                shortcuts, then built formulas to clean and organize files:
+                filtering out rows we did not need, reshaping columns, and
+                pulling cleaned records from an old sheet into a new working
+                sheet so the team was not copy-pasting by hand.
+              </p>
+              <div class="project-tech">
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/python.svg" alt="" /> Python</span>
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecolab.svg" alt="" /> Google Colab</span>
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoftexcel.svg" alt="" /> Excel</span>
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pandas.svg" alt="" /> pandas</span>
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/numpy.svg" alt="" /> NumPy</span>
+                <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/opencv.svg" alt="" /> OpenCV</span>
+                <span class="chip"><img class="icon-svg" src="Assets/icons/easyocr.svg" alt="" /> EasyOCR</span>
+                <span class="chip"><img class="icon-svg" src="Assets/icons/pytesseract.svg" alt="" /> Pytesseract</span>
+                <span class="chip">Apps Script</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <p class="kicker">About me</p>
+            <h2>The person behind the work.</h2>
+          </div>
+
+          <div class="about-grid">
+            <article class="about-card reveal">
+              <h3>A bit of context</h3>
+              <p>
+                I’m Ryan Paolo E. Barlan, a Cum Laude BSIT graduate from
+                Batangas State University — The National Engineering University,
+                JPLPC Malvar Campus, with a major in Business Analytics. I care
+                about software that actually gets used: clear interfaces,
+                reliable data, and code other people can maintain.
+              </p>
+              <p>
+                Beyond class and internships, I edited media for the Junior
+                Philippine Computer Society and keep showing up for tech
+                communities — conferences on cybersecurity, IoT, and student
+                leadership.
+              </p>
+              <div class="certs">
+                <span class="chip">Cisco Network Academy · 2024</span>
+                <span class="chip">JPCS Media &amp; Graphics</span>
+              </div>
+            </article>
+
+            <div class="edu-list">
+              <article class="edu-item reveal">
+                <span>Aug 2022 — July 31, 2026</span>
+                <h3>Batangas State University — The National Engineering University</h3>
+                <p>
+                  Bachelor of Science in Information Technology, Major in
+                  Business Analytics · JPLPC Malvar Campus · <em>Cum Laude</em>
+                </p>
+              </article>
+              <article class="edu-item reveal">
+                <span>Aug 2020 — 2022</span>
+                <h3>Laguna College of Business and Arts</h3>
+                <p>
+                  Technical-Vocational-Livelihood — Information and
+                  Communications Technology
+                </p>
+              </article>
+              <article class="edu-item reveal">
+                <span>Seminars</span>
+                <p>
+                  BITCON 2024 &amp; 2025 · Malwareness cybersecurity · CICS
+                  Leadership Summit 2025
+                </p>
+              </article>
+            </div>
+
+            <article class="cert-showcase reveal">
+              <div class="cert-copy">
+                <p class="kicker">Credential</p>
+                <h3>TOPCIT Level 2</h3>
+                <p>
+                  Test of Practical Competency in ICT, jointly administered by
+                  IITP. Level 2 credential with the official certificate
+                  attached for employers who want to verify it.
+                </p>
+                <ul class="cert-meta">
+                  <li><strong>Certificate No.</strong> TL2506003656</li>
+                  <li><strong>Test date</strong> 10 Dec 2025</li>
+                  <li><strong>Standout module</strong> Tech. Comm. &amp; PM</li>
+                </ul>
+                <a
+                  class="btn btn-primary"
+                  href="Assets/TOPCIT%20-%20CERTIFICATE.pdf"
+                  target="_blank"
+                  rel="noopener"
+                  data-cursor
+                  >Open official PDF</a
+                >
+              </div>
+              <button
+                class="cert-preview"
+                id="cert-preview"
+                type="button"
+                data-cursor
+                aria-label="Enlarge TOPCIT certificate"
+              >
+                <img
+                  src="Assets/topcit-preview.png"
+                  alt="TOPCIT Level 2 certificate for Ryan Barlan"
+                />
+                <span>Click to enlarge</span>
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="social">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <p class="kicker">Social</p>
+            <h2>Let’s get in touch.</h2>
+            <p class="lede">
+              The fastest ways
+              to reach me.
+            </p>
+          </div>
+          <div class="contacts contacts-full">
+              <a class="contact-card" href="mailto:ryanbarlanwork@gmail.com" data-cursor>
+                <div>
+                  <small>Email</small>
+                  <strong>ryanbarlanwork@gmail.com</strong>
+                </div>
+                <span>Write →</span>
+              </a>
+              <a
+                class="contact-card"
+                href="https://github.com/ryanbrln-work"
+                target="_blank"
+                rel="noopener"
+                data-cursor
+              >
+                <div>
+                  <small>GitHub</small>
+                  <strong>github.com/ryanbrln-work</strong>
+                </div>
+                <span>Code →</span>
+              </a>
+              <a
+                class="contact-card"
+                href="https://linkedin.com/in/ryanbrln/"
+                target="_blank"
+                rel="noopener"
+                data-cursor
+              >
+                <div>
+                  <small>LinkedIn</small>
+                  <strong>linkedin.com/in/ryanbrln</strong>
+                </div>
+                <span>Connect →</span>
+              </a>
+              <div class="contact-card">
+                <div>
+                  <small>Location</small>
+                  <strong>Calamba City, Laguna</strong>
+                </div>
+                <span>PH</span>
+              </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">Designed and built by Ryan Barlan · 2026</div>
+    </footer>
+
+    <div class="modal" id="cert-modal" hidden>
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="cert-modal-title">
+        <div class="modal-bar">
+          <h3 id="cert-modal-title">TOPCIT Certificate</h3>
+          <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
+        </div>
+        <img src="Assets/topcit-preview.png" alt="TOPCIT Level 2 certificate" />
+        <a
+          class="btn btn-primary"
+          href="Assets/TOPCIT%20-%20CERTIFICATE.pdf"
+          target="_blank"
+          rel="noopener"
+          >Open PDF</a
+        >
+      </div>
+    </div>
+
+    <div class="modal" id="resume-modal" hidden>
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-panel modal-panel-wide" role="dialog" aria-modal="true" aria-labelledby="resume-modal-title">
+        <div class="modal-bar">
+          <h3 id="resume-modal-title">Resume</h3>
+          <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
+        </div>
+        <img src="Assets/resume-preview.png" alt="Ryan Barlan resume" />
+        <a
+          class="btn btn-primary"
+          href="Assets/Ryan%20Barlan%20-%20Resume.pdf"
+          target="_blank"
+          rel="noopener"
+          >Open PDF</a
+        >
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
