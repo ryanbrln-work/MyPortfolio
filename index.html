@@ -533,7 +533,7 @@
                 emails. Auth uses Firebase Identity Toolkit plus Google OAuth
                 for sign-in and token refresh — no real-money payments.
               </p>
-              <div class="api-grid">
+                <div class="api-grid">
                 <div class="analytics-card">
                   <small>REST · Firebase RTDB</small>
                   <p>Users, decks, rank queries, card stats, achievements.</p>
@@ -547,6 +547,24 @@
                   <p>Identity Toolkit + Google OAuth 2.0 for login and tokens.</p>
                 </div>
               </div>
+              <div class="shot-gallery" aria-label="Hack Slash gameplay screenshots">
+                <button class="shot" type="button" data-lightbox data-group="hackslash" data-src="Assets/HackSlash/Hackslash1.jpg" data-title="Hack Slash — Login" data-cursor>
+                  <img src="Assets/HackSlash/Hackslash1.jpg" alt="Hack Slash login screen with pixel-art bar and city street" width="2048" height="958" loading="lazy" decoding="async" />
+                </button>
+                <button class="shot" type="button" data-lightbox data-group="hackslash" data-src="Assets/HackSlash/Hackslash2.jpg" data-title="Hack Slash — Leaderboard" data-cursor>
+                  <img src="Assets/HackSlash/Hackslash2.jpg" alt="Hack Slash competitive leaderboard with ranks, win rates, and rank points" width="2048" height="958" loading="lazy" decoding="async" />
+                </button>
+                <button class="shot" type="button" data-lightbox data-group="hackslash" data-src="Assets/HackSlash/Hackslash3.jpg" data-title="Hack Slash — Card collection" data-cursor>
+                  <img src="Assets/HackSlash/Hackslash3.jpg" alt="Hack Slash deck builder showing cybersecurity cards and predicted win rate" width="2048" height="958" loading="lazy" decoding="async" />
+                </button>
+                <button class="shot" type="button" data-lightbox data-group="hackslash" data-src="Assets/HackSlash/Hackslash4.jpg" data-title="Hack Slash — Match" data-cursor>
+                  <img src="Assets/HackSlash/Hackslash4.jpg" alt="Hack Slash in-match board with encryption and exploit cards in hand" width="2048" height="958" loading="lazy" decoding="async" />
+                </button>
+                <button class="shot" type="button" data-lightbox data-group="hackslash" data-src="Assets/HackSlash/Hackslash5.jpg" data-title="Hack Slash — Home" data-cursor>
+                  <img src="Assets/HackSlash/Hackslash5.jpg" alt="Hack Slash home hub over a rainy cyberpunk city scene" width="2048" height="958" loading="lazy" decoding="async" />
+                </button>
+              </div>
+              <p class="shot-note">Gameplay screens — click any frame to enlarge.</p>
               <div class="project-tech">
                 <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/godotengine.svg" alt="" /> Godot</span>
                 <span class="chip"><img class="icon-svg" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/firebase.svg" alt="" /> Firebase</span>
@@ -697,6 +715,7 @@
               </p>
               <div class="certs">
                 <span class="chip">Cisco Network Academy · 2024</span>
+                <span class="chip">BITCON 2024</span>
                 <span class="chip">JPCS Media &amp; Graphics</span>
               </div>
             </article>
@@ -760,6 +779,50 @@
                 <img
                   src="Assets/topcit-preview.png"
                   alt="TOPCIT Level 2 certificate for Ryan Barlan"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span>Click to enlarge</span>
+              </button>
+            </article>
+
+            <article class="cert-showcase reveal">
+              <div class="cert-copy">
+                <p class="kicker">Conference</p>
+                <h3>BITCON 2024</h3>
+                <p>
+                  Certificate of Participation from the Batangas Information
+                  Technology Society — <em>Navigating the Future of Technology:
+                  Integration, Innovation, and Security</em>, held in Lipa City.
+                </p>
+                <ul class="cert-meta">
+                  <li><strong>Issued to</strong> Ryan Paolo Barlan</li>
+                  <li><strong>Date</strong> 6 Apr 2024</li>
+                  <li><strong>Venue</strong> Lipa Academy for Sports, Culture and Arts</li>
+                </ul>
+                <a
+                  class="btn btn-primary"
+                  href="Assets/Bitcon%202024%20Cert.pdf"
+                  target="_blank"
+                  rel="noopener"
+                  data-cursor
+                  >Open official PDF</a
+                >
+              </div>
+              <button
+                class="cert-preview"
+                type="button"
+                data-lightbox
+                data-group="bitcon"
+                data-src="Assets/bitcon-2024-preview.jpg"
+                data-title="BITCON 2024 Certificate"
+                data-pdf="Assets/Bitcon 2024 Cert.pdf"
+                data-cursor
+                aria-label="Enlarge BITCON 2024 certificate"
+              >
+                <img
+                  src="Assets/bitcon-2024-preview.jpg"
+                  alt="BITCON 2024 certificate of participation for Ryan Paolo Barlan"
                   loading="lazy"
                   decoding="async"
                 />
@@ -848,6 +911,21 @@
       </div>
     </div>
 
+    <div class="modal" id="media-modal" hidden>
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-panel modal-panel-wide" role="dialog" aria-modal="true" aria-labelledby="media-modal-title">
+        <div class="modal-bar">
+          <h3 id="media-modal-title">Preview</h3>
+          <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
+        </div>
+        <img id="media-modal-img" alt="" />
+        <div class="modal-nav" id="media-nav" hidden>
+          <button type="button" id="media-prev" data-cursor>Previous</button>
+          <button type="button" id="media-next" data-cursor>Next</button>
+        </div>
+        <a class="btn btn-primary" id="media-modal-link" target="_blank" rel="noopener" hidden>Open PDF</a>
+      </div>
+    </div>
     <div class="modal" id="resume-modal" hidden>
       <div class="modal-backdrop" data-close-modal></div>
       <div class="modal-panel modal-panel-wide" role="dialog" aria-modal="true" aria-labelledby="resume-modal-title">
@@ -858,7 +936,7 @@
         <img data-src="Assets/resume-preview.png" alt="Ryan Barlan resume" />
         <a
           class="btn btn-primary"
-          href="Assets/Ryan%20Barlan%20-%20Resume.pdf"
+          href="Assets/Ryan%20Barlan%20-%20New%20Resume.pdf"
           target="_blank"
           rel="noopener"
           >Open PDF</a

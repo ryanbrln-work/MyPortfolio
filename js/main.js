@@ -282,6 +282,10 @@
   document.querySelectorAll("[data-tilt]").forEach((card) => {
     if (reduceMotion || isTouch || lite) return;
     card.addEventListener("mousemove", (e) => {
+      if (e.target.closest(".shot-gallery, a, button")) {
+        card.style.transform = "";
+        return;
+      }
       const rect = card.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top) / rect.height;
@@ -490,6 +494,15 @@
   const certPreview = document.getElementById("cert-preview");
   const resumeModal = document.getElementById("resume-modal");
   const resumeOpen = document.getElementById("resume-open");
+  const mediaModal = document.getElementById("media-modal");
+  const mediaImg = document.getElementById("media-modal-img");
+  const mediaTitle = document.getElementById("media-modal-title");
+  const mediaLink = document.getElementById("media-modal-link");
+  const mediaNav = document.getElementById("media-nav");
+  const mediaPrev = document.getElementById("media-prev");
+  const mediaNext = document.getElementById("media-next");
+  let mediaItems = [];
+  let mediaIndex = 0;
 
   function openModal(modal) {
     if (!modal) return;
@@ -503,7 +516,11 @@
   function closeModal(modal) {
     if (!modal) return;
     modal.hidden = true;
-    if (certModal?.hidden !== false && resumeModal?.hidden !== false) {
+    if (
+      certModal?.hidden !== false &&
+      resumeModal?.hidden !== false &&
+      mediaModal?.hidden !== false
+    ) {
       document.body.style.overflow = "";
     }
   }
@@ -511,17 +528,69 @@
   function closeOpenModals() {
     closeModal(certModal);
     closeModal(resumeModal);
+    closeModal(mediaModal);
   }
+
+  function showMedia(index) {
+    const item = mediaItems[index];
+    if (!item) return;
+    mediaIndex = index;
+    if (mediaTitle) mediaTitle.textContent = item.title;
+    if (mediaImg) {
+      mediaImg.src = item.src;
+      mediaImg.alt = item.title;
+    }
+    if (mediaLink) {
+      if (item.pdf) {
+        mediaLink.hidden = false;
+        mediaLink.href = item.pdf;
+      } else {
+        mediaLink.hidden = true;
+        mediaLink.removeAttribute("href");
+      }
+    }
+    if (mediaNav) mediaNav.hidden = mediaItems.length < 2;
+    openModal(mediaModal);
+  }
+
+  document.querySelectorAll("[data-lightbox]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const group = el.dataset.group || "";
+      const nodes = group
+        ? [...document.querySelectorAll(`[data-lightbox][data-group="${group}"]`)]
+        : [el];
+      mediaItems = nodes.map((node) => ({
+        src: node.dataset.src,
+        title: node.dataset.title || "Preview",
+        pdf: node.dataset.pdf || "",
+      }));
+      const index = Math.max(0, nodes.indexOf(el));
+      showMedia(index);
+    });
+  });
+
+  mediaPrev?.addEventListener("click", () => {
+    if (!mediaItems.length) return;
+    showMedia((mediaIndex - 1 + mediaItems.length) % mediaItems.length);
+  });
+  mediaNext?.addEventListener("click", () => {
+    if (!mediaItems.length) return;
+    showMedia((mediaIndex + 1) % mediaItems.length);
+  });
 
   certPreview?.addEventListener("click", () => openModal(certModal));
   resumeOpen?.addEventListener("click", () => openModal(resumeModal));
-  [certModal, resumeModal].forEach((modal) => {
-    modal?.querySelectorAll("[data-close-modal]").forEach((el) => {
-      el.addEventListener("click", () => closeModal(modal));
+  [certModal, resumeModal, mediaModal].forEach((modal) => {
+    modal?.querySelectorAll("[data-close-modal]").forEach((btn) => {
+      btn.addEventListener("click", () => closeModal(modal));
     });
   });
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeOpenModals();
+    if (mediaModal?.hidden === false && mediaItems.length > 1) {
+      if (e.key === "ArrowLeft") mediaPrev?.click();
+      if (e.key === "ArrowRight") mediaNext?.click();
+    }
   });
 
   function initScene() {
